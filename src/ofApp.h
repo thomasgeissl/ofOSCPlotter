@@ -8,7 +8,7 @@
 class ofApp : public ofBaseApp
 {
 public:
-	ofApp(int port, std::string address, std::string values);
+	ofApp(int port, std::string address, std::string values, std::string scale, std::string offset);
 	void setup();
 	void update();
 	void draw();
@@ -29,7 +29,8 @@ public:
 	int _port;
 	std::string _address;
 	std::vector<std::string> _types;
+	std::vector<float> _scale;
+	std::vector<float> _offsets;
 	std::vector<ofColor> _colors;
 	std::vector<std::vector<float>> _values;
-
 };

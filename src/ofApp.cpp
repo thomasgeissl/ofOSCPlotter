@@ -1,18 +1,27 @@
 #include "ofApp.h"
 
-ofApp::ofApp(int port, std::string address, std::string types) : _port(port), _address(address)
+ofApp::ofApp(int port, std::string address, std::string types, std::string scale, std::string offsets) : _port(port), _address(address)
 {
 	auto t = ofSplitString(types, " ");
-	ofLogNotice() << t.size();
+	auto s = ofSplitString(scale, " ");
+	auto o = ofSplitString(offsets, " ");
 	_types = t;
+	for (auto factor : s)
+	{
+		_scale.push_back(ofToFloat(factor));
+	}
+	for (auto offset : o)
+	{
+		_offsets.push_back(ofToFloat(offset));
+	}
 }
 void ofApp::setup()
 {
 	ofSetWindowTitle("ofOSCPlotter");
-	ofSetFrameRate(60); // run at 60 fps
+	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
 
-	ofLog() << "listening for osc messages on port " << _port;
+	ofLogNotice() << "listening for osc messages on port " << _port;
 	_receiver.setup(_port);
 	_values.resize(_types.size());
 
@@ -65,7 +74,10 @@ void ofApp::draw()
 		ofSetColor(_colors[i]);
 		for (auto j = 0; j < _values[i].size(); j++)
 		{
-			ofDrawCircle(j, ofGetHeight() / 2 + _values[i][j], 2);
+			auto offset = (_offsets.size() > i ? _offsets[i]* ofGetHeight() : 0);
+			auto scale = _scale.size() > i ? _scale[i] : 1; // normalize ofGetHeight()
+
+			ofDrawCircle(j, ofGetHeight() - offset - ofMap(scale * _values[i][j], 0, 1, 0, ofGetHeight()) , 2);
 		}
 	}
 }
