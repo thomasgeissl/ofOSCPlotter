@@ -10,6 +10,8 @@ int main(int argc, char *argv[])
 	("p,port", "port", cxxopts::value<int>()->default_value("8000")) 
 	("a,address", "address", cxxopts::value<string>()->default_value("/values"))
 	("v,values", "values", cxxopts::value<string>()->default_value("f f f"))
+	// ("c,colors", "colors", cxxopts::value<string>()->default_value("f f f"))
+	// ("m,mappings", "mappings", cxxopts::value<string>()->default_value("f f f"))
 	;
 		// ("v,verbose", "Verbose output", cxxopts::value<bool>()->default_value("false"));
 	auto result = options.parse(argc, argv);
