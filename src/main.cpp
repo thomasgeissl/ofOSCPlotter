@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 	// ("d,debug", "Enable debugging")
 	("p,port", "port", cxxopts::value<int>()->default_value("8000")) 
 	("a,address", "address", cxxopts::value<string>()->default_value("/values"))
-	("v,values", "values", cxxopts::value<string>()->default_value("f f f"))
+	("t,types", "types", cxxopts::value<string>()->default_value("f f f"))
 	// ("c,colors", "colors", cxxopts::value<string>()->default_value("f f f"))
 	// ("m,mappings", "mappings", cxxopts::value<string>()->default_value("f f f"))
 	;
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
 	ofLogNotice("port") << result["p"].as<int>();
 	ofLogNotice("address") << result["a"].as<string>();
-	ofLogNotice("values") << result["v"].as<string>();
+	ofLogNotice("types") << result["t"].as<string>();
 
 	ofGLWindowSettings settings;
 	settings.setSize(800, 450);
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	ofRunApp(window, make_shared<ofApp>(
 		result["p"].as<int>(),
 		result["a"].as<std::string>(),
-		result["v"].as<std::string>()
+		result["t"].as<std::string>()
 		));
 	ofRunMainLoop();
 }

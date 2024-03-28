@@ -1,10 +1,10 @@
 #include "ofApp.h"
 
-ofApp::ofApp(int port, std::string address, std::string values) : _port(port), _address(address)
+ofApp::ofApp(int port, std::string address, std::string types) : _port(port), _address(address)
 {
-	auto v = ofSplitString(values, " ");
-	ofLogNotice() << v.size();
-	_types = v;
+	auto t = ofSplitString(types, " ");
+	ofLogNotice() << t.size();
+	_types = t;
 }
 void ofApp::setup()
 {
