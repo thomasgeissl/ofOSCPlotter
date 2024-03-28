@@ -1,7 +1,10 @@
 #include "ofApp.h"
 
-ofApp::ofApp(int port, std::string address) : _port(port), _address(address)
+ofApp::ofApp(int port, std::string address, std::string values) : _port(port), _address(address)
 {
+	auto v = ofSplitString(values, " ");
+	ofLogNotice() << v.size();
+	_types = v;
 }
 void ofApp::setup()
 {
@@ -9,10 +12,17 @@ void ofApp::setup()
 	ofSetFrameRate(60); // run at 60 fps
 	ofSetVerticalSync(true);
 
-	// listen on the given port
 	ofLog() << "listening for osc messages on port " << _port;
 	_receiver.setup(_port);
-	_values.resize(3);
+	_values.resize(_types.size());
+
+	// TODO: get colors from cli args
+	_colors.push_back(ofColor::red);
+	_colors.push_back(ofColor::green);
+	_colors.push_back(ofColor::blue);
+	_colors.push_back(ofColor::white);
+	_colors.push_back(ofColor::purple);
+	_colors.push_back(ofColor::orange);
 }
 
 void ofApp::update()
@@ -24,16 +34,18 @@ void ofApp::update()
 
 		if (m.getAddress() == _address)
 		{
-			_values[0].push_back(m.getArgAsFloat(0));
-			_values[1].push_back(m.getArgAsFloat(1));
-			_values[2].push_back(m.getArgAsFloat(2));
+			for (auto i = 0; i < _types.size(); i++)
+			{
+				if (_types[i] == "f")
+				{
+					_values[i].push_back(m.getArgAsFloat(i));
+				}
+				else if (_types[i] == "i")
+				{
+					_values[i].push_back(m.getArgAsInt32(i));
+				}
+			}
 		}
-		// if (m.getAddress() == "/bno/orientation")
-		// {
-		// 	_values[0].push_back(m.getArgAsFloat(0));
-		// 	_values[1].push_back(m.getArgAsFloat(1));
-		// 	_values[2].push_back(m.getArgAsFloat(2));
-		// }
 	}
 
 	while (_values[0].size() > ofGetWidth())
@@ -48,14 +60,13 @@ void ofApp::update()
 void ofApp::draw()
 {
 	ofBackground(0);
-	for (auto i = 0; _values.size() > 2 && i < _values[0].size(); i++)
+	for (auto i = 0; i < _values.size(); i++)
 	{
-		ofSetColor(ofColor::red);
-		ofDrawCircle(i, ofGetHeight() / 2 + _values[0][i], 2);
-		ofSetColor(ofColor::green);
-		ofDrawCircle(i, ofGetHeight() / 2 + _values[1][i], 2);
-		ofSetColor(ofColor::blue);
-		ofDrawCircle(i, ofGetHeight() / 2 + _values[2][i] - 9.8, 2);
+		ofSetColor(_colors[i]);
+		for (auto j = 0; j < _values[i].size(); j++)
+		{
+			ofDrawCircle(j, ofGetHeight() / 2 + _values[i][j], 2);
+		}
 	}
 }
 void ofApp::keyPressed(int key) {}

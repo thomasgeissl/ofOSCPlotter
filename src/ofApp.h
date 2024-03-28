@@ -8,7 +8,7 @@
 class ofApp : public ofBaseApp
 {
 public:
-	ofApp(int port, std::string address);
+	ofApp(int port, std::string address, std::string values);
 	void setup();
 	void update();
 	void draw();
@@ -28,5 +28,8 @@ public:
 	ofxOscReceiver _receiver;
 	int _port;
 	std::string _address;
+	std::vector<std::string> _types;
+	std::vector<ofColor> _colors;
 	std::vector<std::vector<float>> _values;
+
 };
